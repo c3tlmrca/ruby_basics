@@ -1,3 +1,3 @@
 numbers = []
 
-(10..100).each { |number| numbers << number if (number % 5).zero? }
+(10..100).step(5) { |number| numbers << number }
