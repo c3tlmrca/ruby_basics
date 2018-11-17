@@ -11,7 +11,9 @@ loop do
   price = gets.to_f
   print 'Введите количество товара: '
   amount = gets.to_f
-  next puts 'Цена, кол-во не должны быть <= 0' unless (price && amount).positive?
+  unless price.positive? && amount.positive?
+    next puts 'Цена, кол-во не должны быть <= 0'
+  end
 
   goods[name] = { price: price, amount: amount }
 end

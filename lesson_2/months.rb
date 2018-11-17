@@ -13,4 +13,4 @@ months = {
   december: 31
 }
 
-months.each { |month, day| puts month if (day % 5).zero? }
+months.each { |month, day| puts month if day == 30 }
