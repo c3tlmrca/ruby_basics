@@ -1,5 +1,3 @@
-require 'train'
-
 class Station
   attr_reader :trains, :name
 
