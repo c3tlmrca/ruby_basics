@@ -22,7 +22,7 @@ class Train
   end
 
   def add_car(car)
-    return unless @speed.zero? && car.is_a?(Car)
+    return unless @speed.zero? && correct_car?(car)
 
     @carriages_quantity << car
   end

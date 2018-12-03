@@ -54,7 +54,7 @@ class Main
   LIST_STATIONS_ON_ROUTE = 'Введите имя машрута (первая\последняя станция): '.freeze
   INVALID_INPUT = 'Неверный ввод. Попробуйте еще раз.'.freeze
   OBJECT_CREATED = 'Объект создан.'.freeze
-  ENTER_TO_CONTINUE = 'Нажмите ENTER Lля продолжения...'.freeze
+  ENTER_TO_CONTINUE = 'Нажмите ENTER для продолжения...'.freeze
   NO_STATIONS = 'Станции еще не созданы.'.freeze
   NO_ROUTES = 'Маршруты еще не созданы.'.freeze
   NO_TRAINS = 'Поезда еще не созданы.'.freeze
@@ -64,9 +64,6 @@ class Main
   CHOOSE_TRAIN = 'Введите номер поезда из списка: '.freeze
   NO_TRAINS_AT_STATION = 'На этой станции нет поездов.'.freeze
   MINIMUM_ROUTE_LENGTH = 2
-#  @stations = []
-#  @trains = []
-#  @routes = []
 
   def run_main
     main_menu
@@ -85,16 +82,11 @@ class Main
       print MAIN_MENU
       input = gets.to_i
       case input
-      when 1
-        trains
-      when 2
-        stations
-      when 3
-        routes
-      when 4
-        exit
-      else
-        invalid_input
+      when 1 then trains
+      when 2 then stations
+      when 3 then routes
+      when 4 then exit
+      else invalid_input
       end
     end
   end
@@ -104,22 +96,14 @@ class Main
       print TRAINS
       input = gets.to_i
       case input
-      when 1
-        create_train(:cargo)
-      when 2
-        create_train(:passenger)
-      when 3
-        list_trains
-      when 4
-        add_car
-      when 5
-        remove_car
-      when 6
-        add_route_to_train
-      when 7
-        main_menu
-      else
-        invalid_input
+      when 1 then create_train(CargoTrain)
+      when 2 then create_train(PassengerTrain)
+      when 3 then list_trains
+      when 4 then add_car
+      when 5 then remove_car
+      when 6 then add_route_to_train
+      when 7 then main_menu
+      else invalid_input
       end
     end
   end
@@ -129,16 +113,11 @@ class Main
       print STATIONS
       input = gets.to_i
       case input
-      when 1
-        create_station
-      when 2
-        list_stations
-      when 3
-        print_trains_at_station
-      when 4
-        main_menu
-      else
-        invalid_input
+      when 1 then create_station
+      when 2 then list_stations
+      when 3 then print_trains_at_station
+      when 4 then main_menu
+      else invalid_input
       end
     end
   end
@@ -148,34 +127,21 @@ class Main
       print ROUTES
       input = gets.to_i
       case input
-      when 1
-        create_route
-      when 2
-        add_station_to_route
-      when 3
-        remove_station_from_route
-      when 4
-        list_routes
-      when 5
-        print_stations_on_route
-      when 6
-        go_train_to_next_station
-      when 7
-        go_train_to_previous_station
-      when 8
-        main_menu
-      else
-        invalid_input
+      when 1 then create_route
+      when 2 then add_station_to_route
+      when 3 then remove_station_from_route
+      when 4 then list_routes
+      when 5 then print_stations_on_route
+      when 6 then go_train_to_next_station
+      when 7 then go_train_to_previous_station
+      when 8 then main_menu
+      else invalid_input
       end
     end
   end
 
   def create_train(type)
-    train = if type == :cargo
-              CargoTrain.new(enter_train_id)
-            else
-              PassengerTrain.new(enter_train_id)
-            end
+    train = type.new(enter_train_id)
     @trains << train
     object_created
   end
@@ -415,7 +381,7 @@ class Main
 
   def enter_train_id
     puts ENTER_ID_TRAIN
-    gets.to_i
+    gets.gsub(/[[:punct:]]/, '').delete(' ').strip
   end
 
   def invalid_input

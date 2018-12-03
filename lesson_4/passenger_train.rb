@@ -1,8 +1,7 @@
 class PassengerTrain < Train
-  attr_reader :type
+  private
 
-  def initialize(number)
-    super
-    @type = :passenger
+  def correct_car?(car)
+    car.is_a?(PassengerCar)
   end
 end
