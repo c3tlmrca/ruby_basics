@@ -175,9 +175,10 @@ class Main
     list_stations
     list_routes
     current_route = choose_route
+    current_station =
     loop do
-      current_station = choose_station
-      break current_station unless current_route.stations.include?(current_station)
+      station = choose_station
+      break station unless current_route.stations.include?(station)
     end
     current_route.add_station(current_station)
     ok
@@ -289,9 +290,9 @@ class Main
     loop do
       print CHOOSE_STATION
       choice = gets.to_i - 1
-      next puts INVALID_INPUT if choice.negative?
+      next puts(INVALID_INPUT) unless choise.between?(0, @stations.length - 1)
 
-      break @stations[choice] if choice <= (@stations.length - 1)
+      break @stations[choice]
 
       puts INVALID_INPUT
     end
