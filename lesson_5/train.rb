@@ -1,7 +1,9 @@
-require './instance_cuonter.rb'
+require './instance_counter.rb'
 require './manufactured_by.rb'
 
 class Train
+  include InstanceCounter
+  include ManufacturedBy
   attr_reader :type, :carriages_quantity, :route, :speed, :number
   @@trains = {}
 
@@ -11,9 +13,9 @@ class Train
     @speed = 0
     @route = nil
     validate!
-    manufactured = (manufacturer)
+    self.manufacturer = manufacturer
     @@trains[number] = self
-    reginstance
+    register_instance
   end
 
   def increase_speed(number)

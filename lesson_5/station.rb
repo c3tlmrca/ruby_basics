@@ -13,7 +13,7 @@ class Station
     @name = name
     @trains = []
     @@stations << self
-    reg_instance
+    register_instance
   end
 
   def add_train(train)

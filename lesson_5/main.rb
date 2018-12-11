@@ -175,10 +175,11 @@ class Main
     list_stations
     list_routes
     current_route = choose_route
-    current_station = loop do
-                        station = choose_station
-                        break station unless current_route.stations.include?(station)
-                      end
+    current_station =
+      loop do
+        station = choose_station
+        break station unless current_route.stations.include?(station)
+      end
     current_route.add_station(current_station)
     ok
   end

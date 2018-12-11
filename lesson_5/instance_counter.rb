@@ -6,7 +6,7 @@ module InstanceCounter
 
   module ClassMethods
     def instances
-      @instances = instances || 0
+      @instances ||= 0
     end
 
     protected
@@ -19,8 +19,8 @@ module InstanceCounter
   module InstanceMethods
     protected
 
-    def reg_instance
-      add_instance
+    def register_instance
+      self.class.send(:add_instance)
     end
   end
 end

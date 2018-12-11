@@ -3,7 +3,7 @@ module ManufacturedBy
 
   protected
 
-  def manufactured=(name)
+  def manufacturer=(name)
     @manufacturer = name
   end
 end
