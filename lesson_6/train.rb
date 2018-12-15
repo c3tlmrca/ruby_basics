@@ -9,7 +9,7 @@ class Train
   attr_reader :type, :carriages_quantity, :route, :speed, :number
 
   WRONG_NUMBER = 'Неверный номер.'.freeze
-  NUMBER_FORMAT = /^\w{3}-?\w{2}$/i
+  NUMBER_FORMAT = /^\w{3}-?\w{2}$/i.freeze
 
   @@trains = {}
 

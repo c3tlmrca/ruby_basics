@@ -30,7 +30,7 @@ class Route
   private
 
   def validate!
-    raise THIS_IS_NOT_STATION unless @stations.all?{ |station| station.is_a?(Station)}
+    raise THIS_IS_NOT_STATION unless @stations.all? { |station| station.is_a?(Station) }
     raise FIRST_EQUAL_LAST if @stations.first.eql?(@stations.last)
   end
 end

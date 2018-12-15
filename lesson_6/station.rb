@@ -6,7 +6,7 @@ class Station
   include InstanceCounter
   attr_reader :trains, :name
 
-  NAME_FORMAT = !~ /^\w+$/.freeze
+  NAME_FORMAT = /^\w+$/.freeze
   EMPTY_NAME = 'Название станции не может быть пустым!'.freeze
   INVALID_NAME = 'Невалидное название.'.freeze
 
@@ -42,5 +42,6 @@ class Station
 
   def validate!
     raise EMPTY_NAME if @name.empty?
-    raise  if @name !~ NAME_FORMAT
+    raise INVALID_NAME if @name !~ NAME_FORMAT
+  end
 end

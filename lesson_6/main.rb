@@ -343,7 +343,7 @@ class Main
 
   def enter_station_name
     puts ENTER_STATION_NAME
-    gets.chomp.gsub(' ', '').capitalize
+    gets.chomp.delete(' ', '').capitalize
   end
 
   def enter_first_last_stations
@@ -391,7 +391,7 @@ class Main
 
   def enter_manufacturer_name
     puts ENTER_MANUFACTURER
-    gets.chomp.gsub(' ', '')
+    gets.chomp.delete(' ', '')
   end
 
   def station_already_exist(station)
