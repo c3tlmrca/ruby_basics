@@ -1,6 +1,8 @@
 module Validator
   def valid?
-    validate! rescue return false
+    validate!
     true
+  rescue
+    false
   end
 end

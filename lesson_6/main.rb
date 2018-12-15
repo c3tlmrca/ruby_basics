@@ -43,14 +43,14 @@ class Main
     8. Назад.
   DOC
 
-  ENTER_ID_TRAIN = 'Укажите уникальный идентификационный номер поезда: '.freeze
+  ENTER_ID_TRAIN = 'Укажите уникальный идентификационный номер поезда (формата XXX-XX): '.freeze
   LIST_TRAINS = 'Список всех поездов: '.freeze
-  ENTER_STATION_NAME = 'Введите название станции: '.freeze
+  ENTER_STATION_NAME = 'Введите название станции (цифры и буквы): '.freeze
   LIST_STATIONS = 'Список всех станций: '.freeze
   LIST_TRAINS_AT_STATION = 'Список поездов на текущей станции: '.freeze
   ENTER_FIRST_LAST_STATION_ON_ROUTE = 'Введите номера первой и последней станции в маршруте: '.freeze
   ENTER_STATION_ON_ROUTE = 'Введите имя станции в этом маршруте: '.freeze
-  ENTER_MANUFACTURER = 'Введите имя производителя (не более 15 символов; буквы\цифры): '.freeze
+  ENTER_MANUFACTURER = 'Введите имя производителя (буквы и цифры): '.freeze
   LIST_ROUTES = 'Список всех маршрутов: '.freeze
   LIST_STATIONS_ON_ROUTE = 'Введите имя машрута (первая\последняя станция): '.freeze
   INVALID_INPUT = 'Неверный ввод. Попробуйте еще раз.'.freeze
@@ -169,16 +169,17 @@ class Main
   end
 
   def create_route
-    loop do
-      list_stations
-      no_stations if @stations.empty?
-      create_station if @stations.length < MINIMUM_ROUTE_LENGTH
+    list_stations
+    no_stations if @stations.empty?
+    create_station if @stations.length < MINIMUM_ROUTE_LENGTH
+    begin
       input = enter_first_last_stations
       route = Route.new(input)
-      @routes << route
-      object_created
-      break
+    rescue StandardError
+      retry
     end
+    @routes << route
+    object_created
   end
 
   def add_station_to_route
@@ -258,7 +259,7 @@ class Main
   def print_stations_on_route
     list_routes
     route = choose_route
-    route.print_stations
+    print_stations(route)
     ok
   end
 
@@ -266,7 +267,7 @@ class Main
     list_stations
     station = choose_station
     no_trains_at_station(station) if station.trains.empty?
-    station.print_trains
+    print_trains(station)
     ok
   end
 
@@ -328,9 +329,21 @@ class Main
     end
   end
 
+  def print_stations(route)
+    route.stations.each.with_index(1) do |station, number|
+      puts "#{number}. #{station.name}."
+    end
+  end
+
+  def print_trains(station)
+    station.trains.each.with_index(1) do |train, number|
+      puts "#{number}. #{train.number} - #{train.type}."
+    end
+  end
+
   def enter_station_name
     puts ENTER_STATION_NAME
-    gets.strip.capitalize
+    gets.chomp.gsub(' ', '').capitalize
   end
 
   def enter_first_last_stations
@@ -341,7 +354,6 @@ class Main
       next if input.length != MINIMUM_ROUTE_LENGTH
 
       stations = [@stations[input.first], @stations[input.last]]
-      next print_invalid_input if stations.any?(&:nil?)
 
       break stations
     end
@@ -379,7 +391,7 @@ class Main
 
   def enter_manufacturer_name
     puts ENTER_MANUFACTURER
-    gets.strip
+    gets.chomp.gsub(' ', '')
   end
 
   def station_already_exist(station)

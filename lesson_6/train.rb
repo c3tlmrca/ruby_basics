@@ -7,15 +7,19 @@ class Train
   include ManufacturedBy
   include Validator
   attr_reader :type, :carriages_quantity, :route, :speed, :number
+
+  WRONG_NUMBER = 'Неверный номер.'.freeze
+  NUMBER_FORMAT = /^\w{3}-?\w{2}$/i
+
   @@trains = {}
 
   def initialize(number, manufacturer = nil)
-    validate!(number)
     @number = number
     @carriages_quantity = []
     @speed = 0
     @route = nil
     self.manufacturer = manufacturer
+    validate!
     @@trains[number] = self
     register_instance
   end
@@ -90,7 +94,7 @@ class Train
 
   private
 
-  def validate!(number)
-    raise 'Неверный номер!' if /^[\w]{3}\-?[\w]{2}$/.match(number).nil?
+  def validate!
+    raise WRONG_NUMBER if @number !~ NUMBER_FORMAT
   end
 end

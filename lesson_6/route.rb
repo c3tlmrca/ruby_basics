@@ -6,8 +6,12 @@ class Route
   include InstanceCounter
   attr_reader :stations
 
+  THIS_IS_NOT_STATION = 'Это не станция.'.freeze
+  FIRST_EQUAL_LAST = 'Первая и последняя станции не должны быть одинаковыми.'.freeze
+
   def initialize(stations)
     @stations = stations
+    validate!
     register_instance
   end
 
@@ -18,14 +22,15 @@ class Route
   end
 
   def remove_station(station)
-    return if station == @stations.first || station == @stations.last
+    return if [@stations.first, @stations.last].include?(station)
 
     @stations.delete(station)
   end
 
-  def print_stations
-    @stations.each.with_index(1) do |station, number|
-      puts "#{number}. #{station.name}."
-    end
+  private
+
+  def validate!
+    raise THIS_IS_NOT_STATION unless @stations.all?{ |station| station.is_a?(Station)}
+    raise FIRST_EQUAL_LAST if @stations.first.eql?(@stations.last)
   end
 end

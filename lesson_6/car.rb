@@ -5,7 +5,7 @@ class Car
   attr_reader :added
 
   def inititalize(manufacturer = nil)
-    manufactured(manufacturer)
+    self.manufacturer = manufacturer
     @added = false
   end
 

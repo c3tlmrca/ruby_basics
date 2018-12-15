@@ -5,6 +5,11 @@ class Station
   include Validator
   include InstanceCounter
   attr_reader :trains, :name
+
+  NAME_FORMAT = !~ /^\w+$/.freeze
+  EMPTY_NAME = 'Название станции не может быть пустым!'.freeze
+  INVALID_NAME = 'Невалидное название.'.freeze
+
   @@stations = []
 
   def self.all
@@ -12,9 +17,9 @@ class Station
   end
 
   def initialize(name)
-    validate!(name)
     @name = name
     @trains = []
+    validate!
     @@stations << self
     register_instance
   end
@@ -33,16 +38,9 @@ class Station
     trains.count { |train| train.type == type }
   end
 
-  def print_trains
-    @trains.each.with_index(1) do |train, number|
-      puts "#{number}. #{train.number} - #{train.type}."
-    end
-  end
-
   private
 
-  def validate!(name)
-    raise 'Название станции не может быть пустым!' if name.empty?
-    raise 'Невалидное название.' if /^[\w]{1,}$/.match(name).nil?
-  end
+  def validate!
+    raise EMPTY_NAME if @name.empty?
+    raise  if @name !~ NAME_FORMAT
 end
