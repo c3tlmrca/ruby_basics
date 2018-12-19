@@ -9,38 +9,46 @@ require './passenger_train.rb'
 
 class Main
   MAIN_MENU = <<-DOC.freeze
-    1. Поезда.
-    2. Станции.
-    3. Маршруты.
-    4. Выход
+  1. Поезда.
+  2. Станции.
+  3. Маршруты.
+  4. Выход
   DOC
 
   TRAINS = <<-DOC.freeze
-    1. Создать грузовой поезд.
-    2. Создать пассажирский поезд.
-    3. Просмотреть список поездов.
-    4. Прицепить вагон.
-    5. Отцепить вагон.
-    6. Добавить маршрут.
-    7. Назад.
+  1. Создать грузовой поезд.
+  2. Создать пассажирский поезд.
+  3. Просмотреть список поездов.
+  4. Прицепить вагон.
+  5. Отцепить вагон.
+  6. Добавить маршрут.
+  7. Назад.
   DOC
 
   STATIONS = <<-DOC.freeze
-    1. Создать станцию
-    2. Просмотреть список всех станций.
-    3. Просмотреть список поездов на станции.
-    4. Назад.
+  1. Создать станцию
+  2. Просмотреть список всех станций.
+  3. Просмотреть список поездов на станции.
+  4. Назад.
   DOC
 
   ROUTES = <<-DOC.freeze
-    1. Создать маршрут
-    2. Добавить станцию в машрут.
-    3. Удалить станцию из маршрута.
-    4. Просмотреть список машрутов.
-    5. Просмотреть список станций в маршруте
-    6. Переместить поезд по маршруту вперед.
-    7. Переместить поезд по маршруту назад.
-    8. Назад.
+  1. Создать маршрут
+  2. Добавить станцию в машрут.
+  3. Удалить станцию из маршрута.
+  4. Просмотреть список машрутов.
+  5. Просмотреть список станций в маршруте
+  6. Переместить поезд по маршруту вперед.
+  7. Переместить поезд по маршруту назад.
+  8. Назад.
+  DOC
+
+  CARS = <<-DOC.freeze
+  1. Создать и добавить вагон к поезду.
+  2. Отцепить вагон от поезда.
+  3. Вывести список вагонов поезда.
+  4. Занять место/объем в вагоне.
+  5. Освободить место/объем в вагоне.
   DOC
 
   ENTER_ID_TRAIN = 'Укажите уникальный идентификационный номер поезда (формата XXX-XX): '.freeze
@@ -91,7 +99,8 @@ class Main
       when 1 then trains
       when 2 then stations
       when 3 then routes
-      when 4 then exit
+      when 4 then cars
+      when 5 then exit
       else invalid_input
       end
     end
@@ -105,13 +114,8 @@ class Main
       when 1 then create_train(CargoTrain)
       when 2 then create_train(PassengerTrain)
       when 3 then list_trains
-      when 4 then add_cars
-      when 5 then remove_cars
-      when 6 then print_cars
-      when 7 then add_load_car
-      when 8 then remove_load_car
-      when 9 then add_route_to_train
-      when 0 then main_menu
+      when 4 then add_route_to_train
+      when 5 then main_menu
       else invalid_input
       end
     end
@@ -144,6 +148,22 @@ class Main
       when 6 then go_train_to_next_station
       when 7 then go_train_to_previous_station
       when 8 then main_menu
+      else invalid_input
+      end
+    end
+  end
+
+  def cars
+    loop do
+      puts CARS
+      input = gets.to_i
+      case input
+      when 1 then add_cars
+      when 2 then remove_cars
+      when 3 then print_cars
+      when 4 then add_load_car
+      when 5 then remove_load_car
+      when 6 then main_menu
       else invalid_input
       end
     end

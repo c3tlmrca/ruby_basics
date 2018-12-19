@@ -12,14 +12,14 @@ class Car
 
   @@cars = {}
 
-  def inititalize(id, capacity, manufacturer = nil)
-    self.id = id
-    self.capacity = capacity
+  def initialize(id, capacity, manufacturer = nil)
+    @id = id
+    @capacity = capacity
     @occupied_space = 0
     @added = false
     self.manufacturer = manufacturer
     validate!
-    @@cars[number] = self
+    @@cars[id] = self
   end
 
   def self.find(number)
@@ -27,7 +27,7 @@ class Car
   end
 
   def add(value)
-    raise NO_FREE_SPACE if (@occupied_space + value) >= @capacity
+    raise NO_FREE_SPACE if value > current_free_space
 
     @occupied_space += value
   end
@@ -60,17 +60,11 @@ class Car
 
   protected
 
-  def capacity=(capacity)
+  def validate!
     raise INVALID_CAPACITY unless capacity.positive?
 
-    @capacity = capacity
-  end
-
-  def id=(id)
     raise INVALID_ID if id !~ VALID_ID
 
     raise ALREADY_EXIST unless self.class.find.nil?
-
-    @id = id
   end
 end

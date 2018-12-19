@@ -29,10 +29,8 @@ class Train
     @@trains[number]
   end
 
-  def cars_each
-    @carriages_quantity.each do |var|
-      yield(var) if block_given?
-    end
+  def each_car
+    @carriages_quantity.each { |car| yield(car) }
   end
 
   def increase_speed(number)

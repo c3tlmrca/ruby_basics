@@ -29,10 +29,8 @@ class Station
     register_instance
   end
 
-  def trains_each
-    @@stations.each do |var|
-      yield(var) if block_given?
-    end
+  def each_train
+    @trains.each { |train| yield(train) }
   end
 
   def add_train(train)
