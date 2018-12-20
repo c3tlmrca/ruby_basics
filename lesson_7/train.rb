@@ -63,6 +63,12 @@ class Train
     @route.stations[0].add_train(self)
   end
 
+  def remove_route(route)
+    return if route.nil?
+    
+    route.stations.each { |station| station.remove_train(self) }
+  end
+
   def current_station
     return if @route.nil?
 
@@ -97,7 +103,7 @@ class Train
     current_station.add_train(self)
   end
 
-  protected
+  private
 
   def validate!
     raise WRONG_NUMBER if @number !~ NUMBER_FORMAT

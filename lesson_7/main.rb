@@ -10,37 +10,17 @@ require './passenger_train.rb'
 class Main
   MAIN_MENU = <<-DOC.freeze
   1. Поезда.
-  2. Станции.
-  3. Маршруты.
-  4. Выход
+  2. Вагоны.
+  3. Станции.
+  4. Маршруты.
+  5. Выход.
   DOC
 
   TRAINS = <<-DOC.freeze
   1. Создать грузовой поезд.
   2. Создать пассажирский поезд.
   3. Просмотреть список поездов.
-  4. Прицепить вагон.
-  5. Отцепить вагон.
-  6. Добавить маршрут.
-  7. Назад.
-  DOC
-
-  STATIONS = <<-DOC.freeze
-  1. Создать станцию
-  2. Просмотреть список всех станций.
-  3. Просмотреть список поездов на станции.
   4. Назад.
-  DOC
-
-  ROUTES = <<-DOC.freeze
-  1. Создать маршрут
-  2. Добавить станцию в машрут.
-  3. Удалить станцию из маршрута.
-  4. Просмотреть список машрутов.
-  5. Просмотреть список станций в маршруте
-  6. Переместить поезд по маршруту вперед.
-  7. Переместить поезд по маршруту назад.
-  8. Назад.
   DOC
 
   CARS = <<-DOC.freeze
@@ -49,6 +29,26 @@ class Main
   3. Вывести список вагонов поезда.
   4. Занять место/объем в вагоне.
   5. Освободить место/объем в вагоне.
+  6. Назад.
+  DOC
+
+  STATIONS = <<-DOC.freeze
+  1. Создать станцию.
+  2. Просмотреть список всех станций.
+  3. Просмотреть список поездов на станции.
+  4. Назад.
+  DOC
+
+  ROUTES = <<-DOC.freeze
+  1. Создать маршрут.
+  2. Добавить маршрут к поезду.
+  3. Добавить станцию в машрут.
+  4. Удалить станцию из маршрута.
+  5. Просмотреть список машрутов.
+  6. Просмотреть список станций в маршруте.
+  7. Переместить поезд по маршруту вперед.
+  8. Переместить поезд по маршруту назад.
+  9. Назад.
   DOC
 
   ENTER_ID_TRAIN = 'Укажите уникальный идентификационный номер поезда (формата XXX-XX): '.freeze
@@ -60,6 +60,9 @@ class Main
   ENTER_STATION_ON_ROUTE = 'Введите имя станции в этом маршруте: '.freeze
   ENTER_MANUFACTURER = 'Введите имя производителя (буквы и цифры): '.freeze
   ENTER_CAR_NUMBER = 'Введите номер вагона: '.freeze
+  ENTER_INDEX_CAR = 'Введите порядковый номер вагона: '.freeze
+  ENTER_VALUE_UPLOAD = 'Введите кол-во занимаемых мест/занимаемого объема: '.freeze
+  ENTER_VALUE_OFFLOAD = 'Введите кол-во освобождаемых мест/освобождаемого объема: '.freeze
   ENTER_CAPACITY = 'Введите кол-во мест(для пассажирских вагонов), объем(для грузовых): '.freeze
   LIST_ROUTES = 'Список всех маршрутов: '.freeze
   LIST_STATIONS_ON_ROUTE = 'Введите имя машрута (первая\последняя станция): '.freeze
@@ -97,9 +100,9 @@ class Main
       input = gets.to_i
       case input
       when 1 then trains
-      when 2 then stations
-      when 3 then routes
-      when 4 then cars
+      when 2 then cars
+      when 3 then stations
+      when 4 then routes
       when 5 then exit
       else invalid_input
       end
@@ -114,40 +117,7 @@ class Main
       when 1 then create_train(CargoTrain)
       when 2 then create_train(PassengerTrain)
       when 3 then list_trains
-      when 4 then add_route_to_train
-      when 5 then main_menu
-      else invalid_input
-      end
-    end
-  end
-
-  def stations
-    loop do
-      puts STATIONS
-      input = gets.to_i
-      case input
-      when 1 then create_station
-      when 2 then list_stations
-      when 3 then print_trains_at_station
-      when 4 then main_menu
-      else invalid_input
-      end
-    end
-  end
-
-  def routes
-    loop do
-      puts ROUTES
-      input = gets.to_i
-      case input
-      when 1 then create_route
-      when 2 then add_station_to_route
-      when 3 then remove_station_from_route
-      when 4 then list_routes
-      when 5 then print_stations_on_route
-      when 6 then go_train_to_next_station
-      when 7 then go_train_to_previous_station
-      when 8 then main_menu
+      when 4 then break
       else invalid_input
       end
     end
@@ -163,7 +133,40 @@ class Main
       when 3 then print_cars
       when 4 then add_load_car
       when 5 then remove_load_car
-      when 6 then main_menu
+      when 6 then break
+      else invalid_input
+      end
+    end
+  end
+
+  def stations
+    loop do
+      puts STATIONS
+      input = gets.to_i
+      case input
+      when 1 then create_station
+      when 2 then list_stations
+      when 3 then print_trains_at_station
+      when 4 then break
+      else invalid_input
+      end
+    end
+  end
+
+  def routes
+    loop do
+      puts ROUTES
+      input = gets.to_i
+      case input
+      when 1 then create_route
+      when 2 then add_route_to_train
+      when 3 then add_station_to_route
+      when 4 then remove_station_from_route
+      when 5 then list_routes
+      when 6 then print_stations_on_route
+      when 7 then go_train_to_next_station
+      when 8 then go_train_to_previous_station
+      when 9 then break
       else invalid_input
       end
     end
@@ -212,12 +215,13 @@ class Main
     list_stations
     list_routes
     current_route = choose_route
-    current_station =
+    current_station = nil
       begin
         station = choose_station
         raise station_already_exist_in_route(station, current_route) if current_route.stations.include?(station)
       rescue StandardError
         retry
+      ensure current_station = station
       end
     current_route.add_station(current_station)
     ok
@@ -238,11 +242,15 @@ class Main
   def add_cars
     list_trains
     train = choose_train
-    car = if train.is_a?(CargoTrain)
-            CargoCar.new(enter_car_number, enter_capacity)
-          else
-            PassengerCar.new(enter_car_number, enter_capacity)
-          end
+    begin
+      car = if train.is_a?(CargoTrain)
+              CargoCar.new(enter_car_number, enter_capacity)
+            else
+              PassengerCar.new(enter_car_number, enter_capacity)
+            end
+    rescue StandardError
+      retry
+    end
     train.add_car(car)
     ok
   end
@@ -258,35 +266,39 @@ class Main
   end
 
   def add_load_car
-    car = choose_car
+    car = choose_cars
+    return car.add if car.is_a?(PassengerCar)
     begin
-      puts 'Введите кол-во занимаемых мест/занимаемого объема: '
-      value = gets.to_i
+      value = enter_value_upload
       car.add(value)
-    rescue StandardError
+    rescue StandardError => e
+      puts "#{e.message}"
       retry
     end
+    ok
   end
 
   def remove_load_car
-    car = choose_car
+    car = choose_cars
+    return car.remove if car.is_a?(PassengerCar)
     begin
-      puts 'Введите кол-во освобождаемых мест/освобождаемого объема: '
-      value = gets.to_i
+      value = enter_value_offload
       car.remove(value)
-    rescue StandardError
+    rescue StandardError => e
+      puts "#{e.message}"
       retry
     end
+    ok
   end
 
-  def choose_car
+  def choose_cars
     train = print_cars
     begin
-      puts 'Введите порядковый номер вагона: '
-      choose_car = gets.to_i
+      choose_car = enter_index_number_of_car
       raise CAR_NOT_EXIST if train.carriages_quantity[choose_car].nil?
     rescue StandardError
       retry
+    ensure return train.carriages_quantity[choose_car]
     end
   end
 
@@ -311,6 +323,7 @@ class Main
     list_routes
     train = choose_train
     route = choose_route
+    train.remove_route(train.route)
     train.add_route(route)
     ok
   end
@@ -334,11 +347,11 @@ class Main
     list_trains
     train = choose_train
     add_cars if train.carriages_quantity.empty?
-    train.car_each do |car|
-      puts "#{car.number}, "
+    train.each_car do |car|
+      print "\nВагон с номером: #{car.id}, "
       print "#{car.class}, "
-      print "занято: #{car.current_load_space}"
-      print "свободно: #{car.current_free_space}."
+      print "занято: #{car.current_load_space} "
+      puts "свободно: #{car.current_free_space}."
     end
     train
   end
@@ -349,8 +362,7 @@ class Main
 
   def choose_route
     loop do
-      print_choose_route
-      choice = gets.to_i - 1
+      choice = print_choose_route
       next invalid_input if choice.negative?
 
       break @routes[choice] if choice <= (@routes.length - 1)
@@ -360,16 +372,14 @@ class Main
   end
 
   def choose_station
-    print_choose_station
-    choice = gets.to_i - 1
+    choice = print_choose_station
 
     @stations[choice]
   end
 
   def choose_train
     loop do
-      print_choose_train
-      choice = gets.to_i - 1
+      choice = print_choose_train
       next invalid_input if choice.negative?
       break @trains[choice] if choice <= (@trains.length - 1)
 
@@ -397,8 +407,23 @@ class Main
     no_routes if @routes.empty?
     puts LIST_ROUTES
     @routes.each.with_index(1) do |route, index|
-      puts "#{index}. #{route}."
+      puts "#{index}. #{route.first_station.name} - #{route.last_station.name}."
     end
+  end
+
+  def print_choose_station
+    puts CHOOSE_STATION
+    gets.to_i - 1
+  end
+
+  def print_choose_route
+    puts CHOOSE_ROUTE
+    gets.to_i - 1
+  end
+
+  def print_choose_train
+    puts CHOOSE_TRAIN
+    gets.to_i - 1
   end
 
   def print_stations(route)
@@ -408,16 +433,21 @@ class Main
   end
 
   def print_trains(station)
-    station.trains_each do |train|
-      puts "#{train.number}, "
+    station.each_train do |train|
+      print "\n#{train.number}, "
       print " #{train.class}, "
-      print "#{train.carriages_quantity.length}."
+      print "#{train.carriages_quantity.length}.\n"
     end
   end
 
   def enter_station_name
     puts ENTER_STATION_NAME
     gets.chomp.delete(' ', '').capitalize
+  end
+
+  def enter_index_number_of_car
+    puts ENTER_INDEX_CAR
+    gets.to_i - 1
   end
 
   def enter_car_number
@@ -427,6 +457,16 @@ class Main
 
   def enter_capacity
     puts ENTER_CAPACITY
+    gets.to_i
+  end
+
+  def enter_value_upload
+    puts ENTER_VALUE_UPLOAD
+    gets.to_i
+  end
+
+  def enter_value_offload
+    puts ENTER_VALUE_OFFLOAD
     gets.to_i
   end
 
@@ -501,6 +541,10 @@ class Main
   def invalid_input
     puts INVALID_INPUT
     gets
+  end
+
+  def ok
+    puts 'Ok.'
   end
 end
 

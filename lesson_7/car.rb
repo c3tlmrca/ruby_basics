@@ -9,6 +9,7 @@ class Car
   VALID_ID = /^\w+$/.freeze
   NO_FREE_SPACE = 'Нет свободного места'.freeze
   NEGATIVE_OCCUPIED_SPACE = 'Загруженность вагона не может быть отрицательной'.freeze
+  ALREADY_EXIST = 'Вагон с таким номером уже существует.'
 
   @@cars = {}
 
@@ -58,13 +59,13 @@ class Car
     @added
   end
 
-  protected
+  private
 
   def validate!
     raise INVALID_CAPACITY unless capacity.positive?
 
     raise INVALID_ID if id !~ VALID_ID
 
-    raise ALREADY_EXIST unless self.class.find.nil?
+    raise ALREADY_EXIST unless self.class.find(id).nil?
   end
 end

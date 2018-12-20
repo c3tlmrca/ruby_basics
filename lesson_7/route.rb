@@ -15,6 +15,14 @@ class Route
     register_instance
   end
 
+  def first_station
+    @stations.first
+  end
+
+  def last_station
+    @stations.last
+  end
+
   def add_station(station)
     return unless station.is_a?(Station)
 

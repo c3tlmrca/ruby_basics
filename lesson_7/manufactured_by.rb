@@ -12,7 +12,7 @@ module ManufacturedBy
   end
 
   def validate_manufacturer!
-    return if @manufacturer.nil?
+    return if  @manufacturer.nil? || @manufacturer.strip.empty?
     raise INVALID_MANUFACTURER_NAME if @manufacturer !~ MANUFACTURER_NAME_FORMAT
   end
 end
