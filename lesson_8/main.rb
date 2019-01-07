@@ -8,48 +8,6 @@ require './passenger_car.rb'
 require './passenger_train.rb'
 
 class Main
-  MAIN_MENU = <<-DOC.freeze
-  1. Поезда.
-  2. Вагоны.
-  3. Станции.
-  4. Маршруты.
-  10. Выход.
-  DOC
-
-  TRAINS = <<-DOC.freeze
-  1. Создать поезд.
-  2. Просмотреть список поездов.
-  9. Назад.
-  DOC
-
-  CARS = <<-DOC.freeze
-  1. Создать и добавить вагон к поезду.
-  2. Отцепить вагон от поезда.
-  3. Вывести список вагонов поезда.
-  4. Занять место/объем в вагоне.
-  5. Освободить место/объем в вагоне.
-  9. Назад.
-  DOC
-
-  STATIONS = <<-DOC.freeze
-  1. Создать станцию.
-  2. Просмотреть список всех станций.
-  3. Просмотреть список поездов на станции.
-  9. Назад.
-  DOC
-
-  ROUTES = <<-DOC.freeze
-  1. Создать маршрут.
-  2. Добавить маршрут к поезду.
-  3. Добавить станцию в машрут.
-  4. Удалить станцию из маршрута.
-  5. Просмотреть список машрутов.
-  6. Просмотреть список станций в маршруте.
-  7. Переместить поезд по маршруту вперед.
-  8. Переместить поезд по маршруту назад.
-  9. Назад.
-  DOC
-
   TRAIN_TYPE = <<-DOC.freeze
   1. Пассажирский поезд.
   2. Грузовой поезд.
@@ -97,45 +55,52 @@ class Main
   MINIMUM_ROUTE_LENGTH = 2
   VALID_VARIANTS = (1..2).freeze
 
-  TRAINS_HASH = {
-    1 => :create_train,
-    2 => :list_trains
-  }.freeze
+  TRAINS_ARRAY = [
+    { text: '1. Создать поезд.', handler: :create_train },
+    { text: "2. Просмотреть список поездов.\n9. Назад.", handler: :list_trains }
+  ].freeze
 
-  CARS_HASH = {
-    1 => :add_cars,
-    2 => :remove_cars,
-    3 => :print_cars,
-    4 => :add_load_car,
-    5 => :remove_load_car
-  }.freeze
+  CARS_ARRAY = [
+    { text: '1. Прицепить вагон.', handler: :add_cars },
+    { text: '2. Отцепить вагон.', handler: :remove_cars },
+    { text: '3. Просмотреть список вагонов', handler: :print_cars },
+    { text: '4. Занять место/объем в вагоне.', handler: :add_load_car },
+    { text: "5. Освободить место/объем в вагоне.\n9. Назад.", \
+      handler: :remove_load_car }
+  ].freeze
 
-  STATIONS_HASH = {
-    1 => :create_station,
-    2 => :list_stations,
-    3 => :print_trains_at_station
-  }.freeze
+  STATIONS_ARRAY = [
+    { text: '1. Создать станцию.', handler: :create_station },
+    { text: '2. Просмотреть список станций.', handler: :list_stations },
+    { text: "3. Просмотреть список поездов на станции.\n9. Назад.", \
+      handler: :print_trains_at_station }
+  ].freeze
 
-  ROUTES_HASH = {
-    1 => :create_route,
-    2 => :add_route_to_train,
-    3 => :add_station_to_route,
-    4 => :remove_station_from_route,
-    5 => :list_routes,
-    6 => :print_stations_on_route,
-    7 => :go_train_to_next_station,
-    8 => :go_train_to_previous_station
-  }.freeze
+  ROUTES_ARRAY = [
+    { text: '1. Создать маршрут.', handler: :create_route },
+    { text: '2. Добавить маршрут к поезду.', handler: :add_route_to_train },
+    { text: '3. Добавить станцию в маршрут.', handler: :add_station_to_route },
+    { text: '4. Удалить станцию из маршрута.', \
+      handler: :remove_station_from_route },
+    { text: '5. Список маршрутов.', handler: :list_routes },
+    { text: '6. Список станций в маршруте.', \
+      handler: :print_stations_on_route },
+    { text: '7. Переместить поезд по маршруту вперед.', \
+      handler: :go_train_to_next_station },
+    { text: "8. Переместить поезд по маршруту назад.\n9. Назад.", \
+      handler: :go_train_to_previous_station }
+  ].freeze
 
-  MAIN_MENU_HASH = {
-    1 => [TRAINS, TRAINS_HASH],
-    2 => [CARS, CARS_HASH],
-    3 => [STATIONS, STATIONS_HASH],
-    4 => [ROUTES, ROUTES_HASH]
-  }.freeze
+  MAIN_MENU_ARRAY = [
+    { text: '1. Поезда.', handler: TRAINS_ARRAY },
+    { text: '2. Станции.', handler: CARS_ARRAY },
+    { text: '3. Вагоны.', handler: STATIONS_ARRAY },
+    { text: '4. Маршруты.', handler: ROUTES_ARRAY },
+    { text: '10. Выход.' }
+  ].freeze
 
   def run_main
-    main(MAIN_MENU, MAIN_MENU_HASH)
+    main(MAIN_MENU_ARRAY)
   end
 
   def initialize
@@ -146,19 +111,22 @@ class Main
 
   private
 
-  def main(const, hash)
+  def main(array)
     loop do
-      puts const
+      array.each { |hash| puts hash[:text] }
       input = gets.to_i
+
       break if input.equal?(BREAK)
 
       exit if input.equal?(EXIT)
 
-      next send(:invalid_input) if hash[input].nil?
+      next send(:invalid_input) if \
+      array[input - 1].nil? || input.zero? || input.negative?
 
-      next send(hash[input]) unless MAIN_MENU_HASH.value?(hash[input])
+      next send(array[input - 1][:handler]) if \
+      (array[input - 1][:handler]).is_a?(Symbol)
 
-      main(hash[input].first, hash[input].last)
+      main(array[input - 1][:handler])
     end
   end
 
