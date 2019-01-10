@@ -5,19 +5,17 @@ module Validation
 
     base.instance_variable_set(:@validation, {})
   end
-  
+
   module ClassMethods
     attr_reader :validation
 
-    def validate(attr, type, arg=nil)
+    def validate(attr, type, arg = nil)
       @validation[attr] ||= {}
       @validation[attr][type] = arg
-    end  
-
+    end
   end
 
   module InstanceMethods
-
     def validate!
       self.class.validation.each do |attr, validation_type|
         validation_type.each do |type, arg|
@@ -45,14 +43,14 @@ module Validation
     end
 
     def validate_type(attribute, type)
-      raise "Аттрибут не соответствует указанному типу #{type}." unless attribute.is_a?(type)
+      raise "Аттрибут #{attribute.class} не соответствует указанному типу #{type}." unless attribute.is_a?(type)
     end
 
     def validate_duplicate(attribute, _)
       raise "Такой объект #{attribute} уже существует." unless self.class.find(attribute).nil?
     end
 
-    def validate_posivite(attribute, _)
+    def validate_positive(attribute, _)
       raise "#{attribute} не может быть отрицательным." unless attribute.positive?
     end
   end

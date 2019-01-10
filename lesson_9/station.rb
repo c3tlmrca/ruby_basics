@@ -3,18 +3,17 @@ require './validation.rb'
 require './accessors.rb'
 
 class Station
-  include Validator
   include InstanceCounter
   include Validation
   extend Accessors
+
+  NAME_FORMAT = /^\w+$/.freeze
 
   attr_reader :trains, :name
 
   validate :name, :presence
   validate :name, :format, NAME_FORMAT
-  validate :name, :duplicate 
-
-  NAME_FORMAT = /^\w+$/.freeze
+  validate :name, :duplicate
 
   @@stations = {}
 

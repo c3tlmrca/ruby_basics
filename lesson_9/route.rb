@@ -3,18 +3,19 @@ require './validation.rb'
 require './accessors.rb'
 
 class Route
-  include Validator
   include InstanceCounter
   include Validation
   extend Accessors
 
   attr_reader :stations
 
-  validate station.first.to_sym, :type, Station
-  validate station.last.to_sym, :type, Station
+  validate :first_station, :type, Station
+  validate :last_station, :type, Station
 
   def initialize(stations)
     @stations = stations
+    @first_station = @stations.first
+    @last_station = @stations.last
     validate!
     register_instance
   end

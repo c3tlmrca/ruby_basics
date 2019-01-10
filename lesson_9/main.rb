@@ -59,7 +59,7 @@ class Main
 
   TRAINS_ARRAY = [
     { text: '1. Создать поезд.', handler: :create_train },
-    { text: "2. Просмотреть список поездов.\n9. Назад.", handler: :list_trains }
+    { text: "2. Просмотреть список поездов.\n9. Назад.\n", handler: :list_trains }
   ].freeze
 
   CARS_ARRAY = [
@@ -67,14 +67,14 @@ class Main
     { text: '2. Отцепить вагон.', handler: :remove_cars },
     { text: '3. Просмотреть список вагонов', handler: :print_cars },
     { text: '4. Занять место/объем в вагоне.', handler: :add_load_car },
-    { text: "5. Освободить место/объем в вагоне.\n9. Назад.", \
+    { text: "5. Освободить место/объем в вагоне.\n9. Назад.\n", \
       handler: :remove_load_car }
   ].freeze
 
   STATIONS_ARRAY = [
     { text: '1. Создать станцию.', handler: :create_station },
     { text: '2. Просмотреть список станций.', handler: :list_stations },
-    { text: "3. Просмотреть список поездов на станции.\n9. Назад.", \
+    { text: "3. Просмотреть список поездов на станции.\n9. Назад.\n", \
       handler: :print_trains_at_station }
   ].freeze
 
@@ -89,14 +89,14 @@ class Main
       handler: :print_stations_on_route },
     { text: '7. Переместить поезд по маршруту вперед.', \
       handler: :go_train_to_next_station },
-    { text: "8. Переместить поезд по маршруту назад.\n9. Назад.", \
+    { text: "8. Переместить поезд по маршруту назад.\n9. Назад.\n", \
       handler: :go_train_to_previous_station }
   ].freeze
 
   MAIN_MENU_ARRAY = [
     { text: '1. Поезда.', handler: TRAINS_ARRAY },
-    { text: '2. Станции.', handler: CARS_ARRAY },
-    { text: '3. Вагоны.', handler: STATIONS_ARRAY },
+    { text: '2. Вагоны.', handler: CARS_ARRAY },
+    { text: '3. Станции.', handler: STATIONS_ARRAY },
     { text: '4. Маршруты.', handler: ROUTES_ARRAY },
     { text: '10. Выход.' }
   ].freeze
@@ -164,7 +164,8 @@ class Main
     begin
       input = enter_first_last_stations
       route = Route.new(input)
-    rescue StandardError
+    rescue StandardError => e
+      puts e.message.to_s
       retry
     end
     @routes << route

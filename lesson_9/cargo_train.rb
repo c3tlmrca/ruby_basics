@@ -1,4 +1,5 @@
 class CargoTrain < Train
+
   private
 
   def correct_car?(car)

@@ -9,16 +9,15 @@ class Train
   include Validation
   extend Accessors
 
+  NUMBER_FORMAT = /^\w{3}-?\w{2}$/i.freeze
+
   attr_reader :type, :carriages_quantity, :speed, :number
 
   attr_accessor_with_history :route
 
   validate :number, :presence
   validate :number, :format, NUMBER_FORMAT
-  validate :number, :duplicate 
-  
-  NUMBER_FORMAT = /^\w{3}-?\w{2}$/i.freeze
-
+  validate :number, :duplicate
 
   @@trains = {}
 
